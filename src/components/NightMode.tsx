@@ -26,8 +26,9 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
   const [activeCategory, setActiveCategory] = useState<Task['category']>('none');
   const [energy, setEnergy] = useState<number>(3); // 1-5
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && text.trim()) {
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (text.trim()) {
       const newTask: Task = {
         id: crypto.randomUUID(),
         text: text.trim(),
@@ -103,15 +104,15 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
           <label className="text-secondary text-xs uppercase tracking-widest mb-4 block text-center">
             {isFa ? 'ذهن خود را خالی کنید' : 'Unload your mind'}
           </label>
-          <div className="relative group bg-surface rounded-2xl border border-border p-2 focus-within:border-primary/50 transition-colors flex items-center">
+          <form onSubmit={handleSubmit} className="relative group bg-surface rounded-2xl border border-border p-2 focus-within:border-primary/50 transition-colors flex items-center">
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              onKeyDown={handleKeyDown}
               placeholder={isFa ? "فردا چه کارهایی دارم؟" : "What's on your mind for tomorrow?"}
               className="w-full bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong"
             />
+            <button type="submit" className="hidden">Submit</button>
             <div className={cn("absolute top-1/2 -translate-y-1/2 flex gap-4 opacity-40 focus-within:opacity-100 xl:hover:opacity-100 transition-opacity flex-row-reverse", isFa ? "left-4" : "right-4")}>
               {(Object.keys(CATEGORY_ICONS) as Array<Task['category']>).filter(cat => cat !== 'none').map((cat) => (
                 <button
@@ -127,10 +128,10 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
                 </button>
               ))}
             </div>
-          </div>
+          </form>
         </div>
 
-        <ul className="w-full space-y-4 flex-1 overflow-y-auto pb-32 px-1">
+        <ul className="w-full space-y-4 flex-1 pb-8 px-1">
           {log.tasks.map((task) => (
             <motion.li 
               initial={{ opacity: 0, y: 10 }}
@@ -153,8 +154,7 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
         </ul>
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent flex justify-center z-20 pointer-events-none">
-         <footer className="z-10 flex flex-col md:flex-row justify-between items-center md:items-end border-t border-border pt-8 mt-auto w-full max-w-2xl mx-auto pb-4 gap-8 md:gap-0 pointer-events-auto bg-background/95 backdrop-blur-md px-6 md:px-8 rounded-3xl mb-2 sm:mb-0 sm:rounded-none">
+      <footer className="z-10 flex flex-col md:flex-row justify-between items-center md:items-end border-t border-border pt-8 mt-auto w-full max-w-2xl mx-auto pb-8 gap-8 md:gap-0 pointer-events-auto bg-background/95 backdrop-blur-md px-6 md:px-8 rounded-3xl sm:rounded-none">
             <div className="flex flex-col gap-4 items-center md:items-start w-full md:w-auto">
                <label className="text-secondary text-[10px] uppercase tracking-widest">{isFa ? 'پیش‌بینی انرژی فردا' : 'Predicted Energy for Tomorrow'}</label>
                <div className="flex gap-2" dir="ltr">
@@ -190,7 +190,6 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
                <p className="text-[10px] text-muted font-mono tracking-tighter uppercase">Sync: Offline</p>
             </div>
          </footer>
-      </div>
     </div>
   );
 }

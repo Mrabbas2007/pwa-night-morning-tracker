@@ -74,6 +74,17 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
     });
   };
 
+  const handleDeleteTask = (taskId: string) => {
+      onUpdate({
+          ...log,
+          tasks: log.tasks.filter((t) => t.id !== taskId),
+          morningMood: {
+              ...log.morningMood,
+              focusTop3: (log.morningMood?.focusTop3 || []).filter(id => id !== taskId)
+          }
+      });
+  };
+
   const handleToggleComplete = (taskId: string) => {
      // Haptic feedback (Tactile feel)
      if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -86,8 +97,9 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
      });
   };
 
-  const handleAddTask = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && newTaskText.trim()) {
+  const handleAddTask = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (newTaskText.trim()) {
       const newTask: Task = {
         id: crypto.randomUUID(),
         text: newTaskText.trim(),
@@ -174,7 +186,10 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
                             />
                         )}
                     </span>
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 text-sm text-primary">{CATEGORY_ICONS[task.category] !== '○' ? CATEGORY_ICONS[task.category] : '—'}</span>
+                    <span className="flex-shrink-0 flex items-center justify-center gap-2">
+                        <span className="w-6 text-center text-sm text-primary">{CATEGORY_ICONS[task.category] !== '○' ? CATEGORY_ICONS[task.category] : '—'}</span>
+                        <button onClick={() => handleDeleteTask(task.id)} className="opacity-0 group-hover:opacity-100 text-muted hover:text-primary transition-all font-mono text-[10px] px-1">✕</button>
+                    </span>
                 </motion.div>
             ))}
           </div>
@@ -185,16 +200,16 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
             <h2 className="text-sm font-mono uppercase tracking-widest text-border-strong">{isFa ? 'ساندباکس فعالیت‌ها' : 'Activity Sandbox'}</h2>
           </div>
           
-          <div className="relative mb-6">
+          <form className="relative mb-6" onSubmit={handleAddTask}>
             <input
               type="text"
               value={newTaskText}
               onChange={(e) => setNewTaskText(e.target.value)}
-              onKeyDown={handleAddTask}
               placeholder={isFa ? "نیاز به انجام کار جدیدی دارید؟ (Enter بزنید)" : "Need to add a new task? (Press Enter)"}
               className="w-full bg-surface border border-border rounded-xl py-3 px-4 text-base font-light focus:outline-none focus:border-primary/50 focus:bg-background transition-colors placeholder:text-secondary shadow-sm"
             />
-          </div>
+            <button type="submit" className="hidden">Submit</button>
+          </form>
           
           <div className="flex flex-col gap-2 max-h-[50vh] overflow-y-auto px-1 pb-4">
             {sandboxTasks.length === 0 && (
@@ -226,7 +241,10 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
                         </button>
                     )}
                     
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 text-sm text-secondary opacity-50 mr-2">{CATEGORY_ICONS[task.category] !== '○' ? CATEGORY_ICONS[task.category] : '—'}</span>
+                    <span className="flex-shrink-0 flex items-center justify-center gap-2">
+                        <span className="w-6 text-center text-sm text-secondary opacity-50">{CATEGORY_ICONS[task.category] !== '○' ? CATEGORY_ICONS[task.category] : '—'}</span>
+                        <button onClick={() => handleDeleteTask(task.id)} className="opacity-0 group-hover:opacity-100 text-muted hover:text-primary transition-all font-mono text-[10px] px-1">✕</button>
+                    </span>
                 </motion.div>
             ))}
           </div>
