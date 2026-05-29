@@ -8,9 +8,10 @@ import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 interface Props {
   onClose: () => void;
   user: UserProfile;
+  onUpdateUser: (user: UserProfile) => void;
 }
 
-export default function Insights({ onClose, user }: Props) {
+export default function Insights({ onClose, user, onUpdateUser }: Props) {
   const isFa = user.lang === 'fa';
   const [logs, setLogs] = useState<DailyLog[]>([]);
 
@@ -43,9 +44,15 @@ export default function Insights({ onClose, user }: Props) {
       <div className="max-w-2xl mx-auto flex flex-col gap-8 relative">
         <button onClick={onClose} className={cn("absolute top-0 w-10 h-10 flex items-center justify-center border border-border rounded-full text-lg text-secondary hover:text-foreground hover:bg-surface-hover transition-colors font-mono hover:scale-105 active:scale-95", isFa ? 'left-0' : 'right-0')}>✕</button>
         
-        <header className="border-b border-border-strong pb-6 mb-4">
-          <h1 className="text-3xl font-light text-foreground">{isFa ? 'بینش‌ها و گزارش‌ها' : 'Insights & Analytics'}</h1>
-          <p className="text-secondary text-sm mt-2 font-mono uppercase tracking-widest">{isFa ? 'تحلیل الگوهای رفتاری شما' : 'Analyzing your behavioral patterns'}</p>
+        <header className="border-b border-border-strong pb-6 mb-4 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-light text-foreground">{isFa ? 'بینش‌ها و گزارش‌ها' : 'Insights & Analytics'}</h1>
+            <p className="text-secondary text-sm mt-2 font-mono uppercase tracking-widest">{isFa ? 'تحلیل الگوهای رفتاری شما' : 'Analyzing your behavioral patterns'}</p>
+          </div>
+          <div className="flex items-center gap-1 bg-surface-hover border border-border rounded p-1" dir="ltr">
+            <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
+            <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
+          </div>
         </header>
 
         {logs.length < 2 ? (

@@ -126,7 +126,7 @@ export default function App() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {showInsights && <Insights user={userProfile} onClose={() => setShowInsights(false)} />}
+        {showInsights && <Insights user={userProfile} onUpdateUser={handleUpdateUser} onClose={() => setShowInsights(false)} />}
       </AnimatePresence>
       <div className="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
         <button 

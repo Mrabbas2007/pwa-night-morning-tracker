@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { DailyLog, Task, UserProfile } from '../types';
-import { cn, toPersianNum } from '../lib/utils';
+import { cn, toPersianNum, getGreeting } from '../lib/utils';
 import { motion } from 'motion/react';
 import TaskItem from './ui/TaskItem';
 
@@ -121,32 +121,19 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
            <div className="flex flex-col w-full sm:w-auto">
               <div className="flex justify-between sm:justify-start items-center w-full gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full border border-primary/30 flex items-center justify-center bg-surface-hover">
-                    <span className="text-xl font-sans text-primary">{user.name.charAt(0).toUpperCase()}</span>
-                  </div>
                   <div>
                     <h1 className="text-2xl font-light tracking-tight flex items-center gap-2">
-                      {isFa ? `صبح بخیر، ${user.name}` : `Good morning, ${user.name}`}
+                      {getGreeting(user.name, isFa)}
                     </h1>
-                    <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2" dir="ltr">
+                    <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2" dir={isFa ? "rtl" : "ltr"}>
                       <span className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse"></span>
-                      Morning Protocol
+                      {isFa ? 'پروتکل صبحگاهی' : 'Morning Protocol'}
                     </p>
                   </div>
-                </div>
-                {/* Mobile Language Switch */}
-                <div className="flex items-center gap-1 sm:hidden bg-surface-hover border border-border rounded p-1" dir="ltr">
-                  <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-                  <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
                 </div>
               </div>
            </div>
            <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans w-full sm:w-auto`} dir="ltr">
-              {/* Desktop Language Switch */}
-              <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover border border-border rounded p-1" dir="ltr">
-                <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-                <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
-              </div>
               <p className="text-xl md:text-2xl font-serif italic text-foreground leading-none">{dateFormatter.format(now)}</p>
            </div>
         </div>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Task } from '../../types';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'motion/react';
 
 interface Props {
+  key?: React.Key;
   task: Task;
   isFa: boolean;
   onToggleComplete?: (id: string) => void;
