@@ -1,0 +1,6 @@
+{
+  "name": "MindGlow",
+  "description": "A frictionless, offline-first evening and morning routine planner that reduces cognitive load.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

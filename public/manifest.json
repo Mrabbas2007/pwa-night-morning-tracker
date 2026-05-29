@@ -1,0 +1,25 @@
+{
+  "name": "MindGlow",
+  "short_name": "MindGlow",
+  "description": "Mindfulness & productivity organized.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#F27D26",
+  "shortcuts": [
+    {
+      "name": "Night Dump",
+      "short_name": "Dump",
+      "description": "Unload your mind",
+      "url": "/?mode=night",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Top 3 Focus",
+      "short_name": "Top 3",
+      "description": "View today's top 3 tasks",
+      "url": "/?mode=morning",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192" }]
+    }
+  ]
+}
