@@ -70,8 +70,7 @@ export default function Onboarding({ onComplete, initialName = '', initialLang =
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={lang === 'fa' ? 'نام شما...' : 'Your name...'}
-                    className="w-full bg-transparent py-4 px-6 text-xl md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong text-center"
-                    style={{ fontSize: '16px' }} // Prevent iOS Zoom
+                    className="w-full bg-transparent py-4 px-6 text-base md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong text-center"
                     autoFocus
                   />
                   <button type="submit" className="hidden">Submit</button>

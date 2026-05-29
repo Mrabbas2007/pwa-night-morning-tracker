@@ -129,8 +129,7 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder={isFa ? "فردا چه کارهایی دارم؟" : "What's on your mind for tomorrow?"}
-                className="flex-1 bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none placeholder:text-border-strong"
-                style={{ fontSize: '16px' }} // Prevent iOS zoom
+                className="flex-1 bg-transparent py-4 px-4 text-base md:text-2xl font-light focus:outline-none placeholder:text-border-strong"
               />
               <button 
                 type="submit" 

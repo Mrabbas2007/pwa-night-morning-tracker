@@ -203,8 +203,7 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
                 value={newTaskText}
                 onChange={(e) => setNewTaskText(e.target.value)}
                 placeholder={isFa ? "نیاز به انجام کار جدیدی دارید؟" : "Need to add a new task?"}
-                className="flex-1 bg-transparent py-4 px-5 text-base font-light focus:outline-none placeholder:text-secondary"
-                style={{ fontSize: '16px' }} // Prevent iOS Zoom
+                className="flex-1 bg-transparent py-4 px-5 text-base md:text-xl font-light focus:outline-none placeholder:text-secondary"
               />
               <button 
                 type="submit" 

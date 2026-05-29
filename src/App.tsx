@@ -110,9 +110,11 @@ export default function App() {
     );
   }
 
+  const isSleeping = isNight && !!log?.nightMood?.bedTime;
+
   if (isRenaming) {
     return (
-      <div className="relative min-h-screen">
+      <div className={cn("relative min-h-screen bg-background text-foreground", !isNight && !isSleeping && "theme-morning")}>
           <Onboarding 
               onComplete={(profile) => {
                   handleUpdateUser(profile);
@@ -130,8 +132,6 @@ export default function App() {
       </div>
     );
   }
-
-  const isSleeping = isNight && !!log?.nightMood?.bedTime;
 
   return (
     <div className={cn("w-full min-h-screen relative overflow-hidden bg-background text-foreground font-sans transition-colors duration-500", !isNight && !isSleeping && "theme-morning")}>
