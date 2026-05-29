@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { DailyLog, Task, UserProfile } from '../types';
 import { cn, toPersianNum, getGreeting } from '../lib/utils';
-import { motion } from 'motion/react';
 import TaskItem from './ui/TaskItem';
 
 interface Props {
@@ -11,11 +10,19 @@ interface Props {
   onUpdateUser: (user: UserProfile) => void;
 }
 
-export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props) {
+export default function MorningMode({ log, onUpdate, user }: Props) {
   const lang = user.lang || 'fa';
   const isFa = lang === 'fa';
   const [newTaskText, setNewTaskText] = useState('');
   const top3Ids = log.morningMood?.focusTop3 || [];
+
+  // ترریق خودکار کلاس تم صبحگاهی به بدنه وب اپلیکیشن و حذف آن در هنگام Unmount
+  useEffect(() => {
+    document.documentElement.classList.add('theme-morning');
+    return () => {
+      document.documentElement.classList.remove('theme-morning');
+    };
+  }, []);
   
   const top3Tasks = useMemo(() => {
     return top3Ids.map(id => log.tasks.find(t => t.id === id)).filter(Boolean) as Task[];
@@ -31,7 +38,7 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
     const ideas = log.tasks.filter(t => t.category === 'idea').length;
     
     let text = isFa ? `تا این لحظه ` : `You have logged `;
-    let parts = [];
+    const parts = [];
     if (important > 0) parts.push(isFa ? `${toPersianNum(important, lang)} کار مهم` : `${important} important tasks`);
     if (ideas > 0) parts.push(isFa ? `${toPersianNum(ideas, lang)} ایده` : `${ideas} ideas`);
     
@@ -54,7 +61,7 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
     if (newTop3.includes(taskId)) {
        newTop3 = newTop3.filter(id => id !== taskId);
     } else {
-       if (newTop3.length >= 3) return; // limit to 3
+       if (newTop3.length >= 3) return;
        newTop3.push(taskId);
     }
     onUpdate({
@@ -78,10 +85,9 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
   };
 
   const handleToggleComplete = (taskId: string) => {
-     // Haptic feedback (Tactile feel)
      if (typeof navigator !== 'undefined' && navigator.vibrate) {
          const wasCompleted = log.tasks.find(t => t.id === taskId)?.completed;
-         if (!wasCompleted) navigator.vibrate(50); // Vibrate on complete
+         if (!wasCompleted) navigator.vibrate(40); // هپتیک فیدبک سبک زمان انجام کار
      }
      onUpdate({
          ...log,
@@ -112,35 +118,26 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
 
   return (
     <div className={cn("min-h-screen bg-background text-foreground p-6 md:p-12 flex flex-col transition-colors duration-1000 w-full mx-auto relative overflow-hidden", isFa ? 'font-sans' : 'font-serif')} dir={isFa ? 'rtl' : 'ltr'}>
-      
-      {/* Background accents */}
-      <div className="absolute top-[-100px] left-[-100px] w-96 h-96 md:w-[500px] md:h-[500px] bg-yellow-900/10 rounded-full blur-[120px] opacity-40 pointer-events-none"></div>
+      <div className="absolute top-[-100px] left-[-100px] w-96 h-96 md:w-[500px] md:h-[500px] bg-yellow-600/10 rounded-full blur-[120px] opacity-40 pointer-events-none" />
       
       <header className="mb-10 w-full max-w-2xl mx-auto z-10 flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-6 sm:gap-0">
-           <div className="flex flex-col w-full sm:w-auto">
-              <div className="flex justify-between sm:justify-start items-center w-full gap-4">
-                <div className="flex items-center gap-4">
-                  <div>
-                    <h1 className="text-2xl font-light tracking-tight flex items-center gap-2">
-                      {getGreeting(user.name, isFa)}
-                    </h1>
-                    <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2" dir={isFa ? "rtl" : "ltr"}>
-                      <span className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse"></span>
-                      {isFa ? 'پروتکل صبحگاهی' : 'Morning Protocol'}
-                    </p>
-                  </div>
-                </div>
-              </div>
+           <div>
+              <h1 className="text-2xl font-light tracking-tight flex items-center gap-2">
+                {getGreeting(user.name, isFa)}
+              </h1>
+              <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse" />
+                {isFa ? 'پروتکل صبحگاهی' : 'Morning Protocol'}
+              </p>
            </div>
-           <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans w-full sm:w-auto`} dir="ltr">
+           <div className="font-sans" dir="ltr">
               <p className="text-xl md:text-2xl font-serif italic text-foreground leading-none">{dateFormatter.format(now)}</p>
            </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
            <div className="p-5 border border-border bg-surface rounded-2xl shadow-sm relative overflow-hidden backdrop-blur-sm flex flex-col justify-center">
-              <div className={cn("absolute top-0 h-full w-1 bg-primary/50", isFa ? 'right-0' : 'left-0')}></div>
               <span className="text-xs font-mono uppercase tracking-widest text-muted mb-2">{isFa ? 'وضعیت فعلی شما' : 'Current Status'}</span>
               <p className="text-foreground leading-relaxed font-light text-sm">{generateSummary()}</p>
            </div>
@@ -151,7 +148,7 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
                     <span className="text-2xl font-serif text-foreground">{toPersianNum(log.tasks.length, lang)}</span>
                     <span className="text-xs text-secondary">{isFa ? 'کل تسک‌ها' : 'Total'}</span>
                  </div>
-                 <div className="w-[1px] h-8 bg-border"></div>
+                 <div className="w-[1px] h-8 bg-border" />
                  <div className="flex flex-col">
                     <span className="text-2xl font-serif text-primary">{toPersianNum(log.tasks.filter(t => t.completed).length, lang)}</span>
                     <span className="text-xs text-secondary">{isFa ? 'انجام شده' : 'Done'}</span>
@@ -162,32 +159,32 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
       </header>
 
       <main className="flex-1 flex flex-col gap-10 pb-20 w-full max-w-2xl mx-auto z-10">
-        
-        <section className="space-y-4 relative">
+        <section className="space-y-4">
           <div className="flex items-center gap-2 mb-2 border-b border-border pb-2">
-             <span className="w-2 h-2 bg-primary rounded-full inline-block"></span>
+            <span className="w-2 h-2 bg-primary rounded-full" />
             <h2 className="text-sm font-mono uppercase tracking-widest text-border-strong">{isFa ? 'تمرکز طلایی امروز' : 'Golden Focus Today'}</h2>
             <span className={cn("text-xs font-mono text-secondary", isFa ? 'mr-auto' : 'ml-auto')} dir="ltr">[{toPersianNum(top3Tasks.length, lang)}/3]</span>
           </div>
 
           <div className="flex flex-col gap-3 min-h-[120px]">
-            {top3Tasks.length === 0 && (
-                <div className="flex-1 flex flex-col items-center justify-center text-secondary py-8 border border-dashed border-border rounded-xl">
-                    <p className="text-xs font-mono uppercase tracking-widest px-4 text-center">{isFa ? 'تسک‌های مهم امروز را از لیست پایین انتخاب کنید' : 'Select today\'s top priorities from below'}</p>
-                </div>
-            )}
-            {top3Tasks.map(task => (
+            {top3Tasks.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-secondary py-8 border border-dashed border-border rounded-xl bg-surface/30">
+                <p className="text-xs font-mono uppercase tracking-widest px-4 text-center">{isFa ? 'تسک‌های مهم امروز را از لیست پایین انتخاب کنید' : 'Select today\'s top priorities from below'}</p>
+              </div>
+            ) : (
+              top3Tasks.map(task => (
                 <TaskItem 
-                    key={task.id}
-                    task={task}
-                    isFa={isFa}
-                    variant="morning-main"
-                    layoutId={`main-${task.id}`}
-                    onToggleComplete={handleToggleComplete}
-                    onToggleTop3={handleToggleTop3}
-                    onDelete={handleDeleteTask}
+                  key={task.id}
+                  task={task}
+                  isFa={isFa}
+                  variant="morning-main"
+                  layoutId={`main-${task.id}`}
+                  onToggleComplete={handleToggleComplete}
+                  onToggleTop3={handleToggleTop3}
+                  onDelete={handleDeleteTask}
                 />
-            ))}
+              ))
+            )}
           </div>
         </section>
 
@@ -209,42 +206,37 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
                 type="submit" 
                 disabled={!newTaskText.trim()}
                 className={cn(
-                  "w-12 h-12 flex items-center justify-center rounded-lg bg-primary text-background transition-all active:scale-95 disabled:opacity-30 disabled:active:scale-100 disabled:cursor-not-allowed hover:bg-primary/90",
+                  "w-12 h-12 flex items-center justify-center rounded-lg bg-primary text-background transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary/90",
                   isFa ? "ml-2" : "mr-2"
                 )}
-                aria-label={isFa ? "ثبت تسک" : "Add task"}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
               </button>
             </div>
-             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-muted text-[10px] font-mono tracking-widest uppercase opacity-0 group-focus-within:opacity-100 transition-opacity hidden md:block">
-               [ Press Enter ]
-             </div>
           </form>
           
           <div className="flex flex-col gap-2 max-h-[50vh] overflow-y-auto px-1 pb-4">
-            {sandboxTasks.length === 0 && (
-                 <p className="text-secondary text-xs font-mono text-center py-6 uppercase tracking-widest">{isFa ? 'لیست خالی است' : 'List is empty'}</p>
-            )}
-            {sandboxTasks.map(task => (
-                 <TaskItem 
-                    key={task.id}
-                    task={task}
-                    isFa={isFa}
-                    variant="morning-sandbox"
-                    layoutId={`sandbox-${task.id}`}
-                    showFocusButton={true}
-                    canAddTop3={top3Tasks.length < 3}
-                    onToggleComplete={handleToggleComplete}
-                    onToggleTop3={handleToggleTop3}
-                    onDelete={handleDeleteTask}
+            {sandboxTasks.length === 0 ? (
+              <p className="text-secondary text-xs font-mono text-center py-6 uppercase tracking-widest">{isFa ? 'لیست خالی است' : 'List is empty'}</p>
+            ) : (
+              sandboxTasks.map(task => (
+                <TaskItem 
+                  key={task.id}
+                  task={task}
+                  isFa={isFa}
+                  variant="morning-sandbox"
+                  layoutId={`sandbox-${task.id}`}
+                  showFocusButton={true}
+                  canAddTop3={top3Tasks.length < 3}
+                  onToggleComplete={handleToggleComplete}
+                  onToggleTop3={handleToggleTop3}
+                  onDelete={handleDeleteTask}
                 />
-            ))}
+              ))
+            )}
           </div>
         </section>
-
       </main>
-
     </div>
   );
 }
