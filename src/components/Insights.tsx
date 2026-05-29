@@ -49,10 +49,6 @@ export default function Insights({ onClose, user, onUpdateUser }: Props) {
             <h1 className="text-3xl font-light text-foreground">{isFa ? 'بینش‌ها و گزارش‌ها' : 'Insights & Analytics'}</h1>
             <p className="text-secondary text-sm mt-2 font-mono uppercase tracking-widest">{isFa ? 'تحلیل الگوهای رفتاری شما' : 'Analyzing your behavioral patterns'}</p>
           </div>
-          <div className="flex items-center gap-1 bg-surface-hover border border-border rounded p-1" dir="ltr">
-            <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-            <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
-          </div>
         </header>
 
         {logs.length < 2 ? (

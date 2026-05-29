@@ -5,12 +5,14 @@ import { cn } from '../lib/utils';
 
 interface Props {
   onComplete: (profile: UserProfile) => void;
+  initialName?: string;
+  initialLang?: UserProfile['lang'];
 }
 
-export default function Onboarding({ onComplete }: Props) {
-  const [step, setStep] = useState<1 | 2>(1);
-  const [lang, setLang] = useState<'fa' | 'en'>('fa');
-  const [name, setName] = useState('');
+export default function Onboarding({ onComplete, initialName = '', initialLang = 'fa' }: Props) {
+  const [step, setStep] = useState<1 | 2>(initialName ? 2 : 1);
+  const [lang, setLang] = useState<'fa' | 'en'>(initialLang);
+  const [name, setName] = useState(initialName);
 
   const handleLangSelect = (selected: 'fa' | 'en') => {
     setLang(selected);
@@ -51,12 +53,14 @@ export default function Onboarding({ onComplete }: Props) {
           ) : (
              <motion.div key="step-2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="flex flex-col gap-10">
                  <div className="text-center space-y-4 relative">
-                  <button onClick={() => setStep(1)} className={cn("absolute top-0 w-10 h-10 flex items-center justify-center border border-border rounded-full text-lg text-secondary hover:text-foreground hover:bg-surface-hover transition-colors font-mono hover:scale-105 active:scale-95 cursor-pointer", lang === 'fa' ? 'right-0' : 'left-0')}>{lang === 'fa' ? '→' : '←'}</button>
+                  {!initialName && (
+                    <button onClick={() => setStep(1)} className={cn("absolute top-0 w-10 h-10 flex items-center justify-center border border-border rounded-full text-lg text-secondary hover:text-foreground hover:bg-surface-hover transition-colors font-mono hover:scale-105 active:scale-95 cursor-pointer", lang === 'fa' ? 'right-0' : 'left-0')}>{lang === 'fa' ? '→' : '←'}</button>
+                  )}
                   <div className="w-12 h-12 bg-primary/10 border border-primary/30 rounded-full mx-auto flex items-center justify-center mb-6 shadow-[0_0_20px_color-mix(in_srgb,var(--primary)_20%,transparent)]">
                     <span className="w-3 h-3 bg-primary rounded-full"></span>
                   </div>
                   <h1 className="text-3xl font-light text-foreground">
-                    {lang === 'fa' ? 'دوست داری چی صدات کنم؟' : 'What should I call you?'}
+                    {lang === 'fa' ? (initialName ? 'تغییر نام' : 'شما را چه بنامیم؟') : (initialName ? 'Change your name' : 'What should I call you?')}
                   </h1>
                 </div>
 
