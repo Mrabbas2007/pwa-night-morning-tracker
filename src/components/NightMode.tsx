@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { DailyLog, Task, UserProfile } from '../types';
 import { cn, toPersianNum } from '../lib/utils';
-import { Moon } from 'lucide-react';
 import { motion } from 'motion/react';
+import TaskItem from './ui/TaskItem';
 
 interface Props {
   log: DailyLog;
@@ -68,8 +68,8 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
   return (
     <div className={cn("min-h-screen bg-background text-foreground selection:bg-primary/30 p-6 md:p-12 flex flex-col transition-colors duration-1000 w-full mx-auto relative overflow-hidden", isFa ? 'font-sans' : 'font-serif')} dir={isFa ? 'rtl' : 'ltr'}>
       {/* Background Glows */}
-      <div className="absolute top-[-100px] left-[-100px] w-[500px] h-[500px] bg-indigo-950 rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
-      <div className="absolute bottom-[-50px] right-[-50px] w-[400px] h-[400px] bg-orange-950 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
+      <div className="absolute top-[-100px] left-[-100px] w-96 h-96 md:w-[500px] md:h-[500px] bg-indigo-950 rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
+      <div className="absolute bottom-[-50px] right-[-50px] w-80 h-80 md:w-[400px] md:h-[400px] bg-orange-950 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
       <div className={cn("absolute top-0 h-full w-px bg-gradient-to-b from-transparent via-border to-transparent pointer-events-none", isFa ? 'right-0' : 'left-0')}></div>
       <div className={cn("absolute top-1/2 -translate-y-1/2 [writing-mode:vertical-rl] text-[10px] text-border-strong uppercase tracking-[1em] font-light pointer-events-none hidden xl:block", isFa ? 'right-8' : 'left-8 rotate-180')}>
         {isFa ? 'سازماندهی ذهن به سبکی نوین' : 'Non-Linear Organization'}
@@ -83,16 +83,16 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
               {isFa ? `شب خوش، ${user.name}` : `Good evening, ${user.name}`}
             </h1>
             <div className="flex items-center gap-1 sm:hidden bg-surface-hover rounded p-1" dir="ltr">
-              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-2 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-2 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
+              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
+              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
             </div>
           </div>
           <p className="text-secondary font-mono text-[10px] mt-2 uppercase tracking-widest" dir="ltr">System Status: Night Protocol Active</p>
         </div>
         <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans text-foreground w-full sm:w-auto`} dir="ltr">
             <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover rounded p-1">
-              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-2 py-[2px] rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-2 py-[2px] rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
+              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-[2px] rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
+              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-[2px] rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
             </div>
             <p className="text-xl md:text-2xl font-serif italic">{dateFormatter.format(now)}</p>
             <p className="text-secondary text-xs mt-1 w-full flex justify-between sm:justify-end gap-2">{isFa ? 'تسک‌های ثبت شده:' : 'Tasks logged:'} <span className="text-primary">{toPersianNum(log.tasks.length, lang)}</span></p>
@@ -104,23 +104,28 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
           <label className="text-secondary text-xs uppercase tracking-widest mb-4 block text-center">
             {isFa ? 'ذهن خود را خالی کنید' : 'Unload your mind'}
           </label>
-          <form onSubmit={handleSubmit} className="relative group bg-surface rounded-2xl border border-border p-2 focus-within:border-primary/50 transition-colors flex items-center">
+          <form onSubmit={handleSubmit} className="relative group bg-surface rounded-2xl border border-border focus-within:border-primary/50 transition-colors flex flex-col sm:flex-row items-center p-2 sm:p-2 sm:h-[80px]">
+             {/* Input Area */}
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={isFa ? "فردا چه کارهایی دارم؟" : "What's on your mind for tomorrow?"}
-              className="w-full bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong"
+              className={cn("w-full bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong", isFa ? "sm:pl-48" : "sm:pr-48")}
+              style={{ fontSize: '16px' }} // Prevent iOS zoom
             />
             <button type="submit" className="hidden">Submit</button>
-            <div className={cn("absolute top-1/2 -translate-y-1/2 flex gap-4 opacity-40 focus-within:opacity-100 xl:hover:opacity-100 transition-opacity flex-row-reverse", isFa ? "left-4" : "right-4")}>
+            
+            {/* Category Buttons - Move to bottom on mobile, side on desktop */}
+            <div className={cn("flex w-full sm:w-auto h-full sm:absolute sm:top-1/2 sm:-translate-y-1/2 flex-row border-t sm:border-t-0 border-border sm:border-transparent mt-2 sm:mt-0 pt-3 sm:pt-0 justify-around sm:justify-start gap-4 opacity-100 sm:opacity-40 group-focus-within:opacity-100 xl:hover:opacity-100 transition-opacity", isFa ? "sm:left-4 sm:flex-row-reverse" : "sm:right-4 sm:flex-row")}>
               {(Object.keys(CATEGORY_ICONS) as Array<Task['category']>).filter(cat => cat !== 'none').map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(activeCategory === cat ? 'none' : cat)}
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setActiveCategory(activeCategory === cat ? 'none' : cat); }}
                   className={cn(
-                    "hover:text-primary transition-colors text-xl",
-                    activeCategory === cat ? "text-primary scale-110" : ""
+                    "hover:text-primary transition-colors text-2xl sm:text-xl py-2 px-3 sm:p-0 flex-1 sm:flex-none text-center",
+                    activeCategory === cat ? "text-primary scale-110" : "text-muted"
                   )}
                   title={cat}
                 >
@@ -129,27 +134,23 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
               ))}
             </div>
           </form>
+           <div className="mt-4 text-muted text-[10px] font-mono tracking-widest uppercase text-center opacity-0 focus-within:opacity-100 transition-opacity hidden md:block">
+               [ Press Enter to Add ]
+           </div>
         </div>
 
-        <ul className="w-full space-y-4 flex-1 pb-8 px-1">
+        <ul className="w-full flex-1 pb-8 px-1 flex flex-col gap-3 max-h-[40vh] overflow-y-auto">
+          {log.tasks.length === 0 && (
+                 <p className="text-secondary text-xs font-mono text-center py-6 uppercase tracking-widest">{isFa ? 'لیست خالی است' : 'List is empty'}</p>
+          )}
           {log.tasks.map((task) => (
-            <motion.li 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              key={task.id} 
-              className="flex items-center justify-between p-4 border border-border bg-surface rounded-xl group hover:border-border-strong transition-colors"
-            >
-              <div className="flex items-center gap-4">
-                <span className="text-primary text-xs w-6 text-center">{CATEGORY_ICONS[task.category] !== '○' ? CATEGORY_ICONS[task.category] : '—'}</span>
-                <span className="text-lg font-light text-foreground">{task.text}</span>
-              </div>
-              <button 
-                 onClick={() => handleRemove(task.id)}
-                 className="opacity-0 group-hover:opacity-100 text-muted hover:text-primary transition-all px-2 font-mono text-[10px]"
-              >
-                  ✕
-              </button>
-            </motion.li>
+             <TaskItem 
+                key={task.id}
+                task={task}
+                isFa={isFa}
+                variant="night"
+                onDelete={handleRemove}
+            />
           ))}
         </ul>
       </main>
@@ -163,7 +164,7 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
                      key={level}
                      onClick={() => setEnergy(level)}
                      className={cn(
-                       "w-8 h-12 md:w-10 md:h-16 border rounded flex flex-col-reverse p-1 bg-black transition-all",
+                       "w-10 h-14 md:w-10 md:h-16 border rounded flex flex-col-reverse p-1 bg-black transition-all",
                        energy >= level ? "border-primary/50 ring-2 ring-primary/20" : "border-border-strong"
                      )}
                    >
@@ -175,9 +176,9 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
 
             <button 
               onClick={handleGoToSleep}
-              className="group flex flex-col items-center gap-3 w-full md:w-auto"
+              className="group flex flex-col items-center gap-3 w-full md:w-auto active:scale-95 transition-transform"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-primary/30 flex items-center justify-center bg-black hover:bg-primary/5 transition-all duration-300">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-primary/30 flex items-center justify-center bg-black hover:bg-primary/5 transition-all duration-300 shadow-[0_0_20px_color-mix(in_srgb,var(--primary)_10%,transparent)]">
                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-primary/60 flex items-center justify-center group-hover:scale-105 transition-transform">
                   <div className="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform"></div>
                 </div>
@@ -186,8 +187,8 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
             </button>
 
             <div className="text-center md:text-left flex-col gap-1 hidden md:flex min-w-[120px]" dir="ltr">
-               <p className="text-[10px] text-muted font-mono tracking-tighter uppercase">Local DB: Active</p>
-               <p className="text-[10px] text-muted font-mono tracking-tighter uppercase">Sync: Offline</p>
+               <p className="text-[10px] text-muted font-mono tracking-tighter uppercase flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Local DB</p>
+               <p className="text-[10px] text-muted font-mono tracking-tighter uppercase flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Offline</p>
             </div>
          </footer>
     </div>

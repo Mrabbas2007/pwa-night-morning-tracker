@@ -128,18 +128,26 @@ export default function App() {
       <AnimatePresence>
         {showInsights && <Insights user={userProfile} onClose={() => setShowInsights(false)} />}
       </AnimatePresence>
+      <div className="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
         <button 
-        onClick={() => setIsNight(!isNight)}
-        className="fixed bottom-[80px] right-6 z-40 bg-surface border border-border p-3 rounded-full text-foreground shadow-lg hover:bg-surface-hover transition-colors group"
-      >
-        <span className="text-xl font-mono opacity-50 group-hover:opacity-100 transition-opacity flex items-center justify-center">☼</span>
-      </button>
-      <button 
-        onClick={() => setShowInsights(true)}
-        className="fixed bottom-6 right-6 z-40 bg-surface border border-border p-3 rounded-full text-foreground shadow-lg hover:bg-surface-hover transition-colors group"
-      >
-        <span className="text-xl font-mono opacity-50 group-hover:opacity-100 transition-opacity flex items-center justify-center">∿</span>
-      </button>
+          onClick={() => setIsNight(!isNight)}
+          className="bg-surface border border-border p-3 rounded-full text-foreground shadow-lg hover:bg-surface-hover hover:scale-105 active:scale-95 transition-all group focus:outline-none flex items-center justify-center"
+          aria-label="Toggle Theme"
+        >
+          {isNight ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary group-hover:text-primary transition-colors"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary group-hover:text-primary transition-colors"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          )}
+        </button>
+        <button 
+          onClick={() => setShowInsights(true)}
+          className="bg-surface border border-border p-3 rounded-full text-foreground shadow-lg hover:bg-surface-hover hover:scale-105 active:scale-95 transition-all group focus:outline-none flex items-center justify-center"
+          aria-label="Show Insights"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary group-hover:text-primary transition-colors"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </button>
+      </div>
     </div>
   );
 }
