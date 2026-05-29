@@ -33,18 +33,18 @@
     --border-strong: #333333;
     --muted: #444444;
   }
+}
 
-  .theme-morning {
-    /* Morning Protocol (Light) */
-    --background: #F5F3EF;
-    --foreground: #111111;
-    --foreground-muted: #444444;
-    --surface: rgba(255, 255, 255, 0.6);
-    --surface-hover: #ffffff;
-    --border: rgba(17, 17, 17, 0.1);
-    --border-strong: rgba(17, 17, 17, 0.2);
-    --muted: #888888;
-  }
+.theme-morning {
+  /* Morning Protocol (Light) */
+  --background: #F5F3EF;
+  --foreground: #111111;
+  --foreground-muted: #444444;
+  --surface: rgba(255, 255, 255, 0.6);
+  --surface-hover: #ffffff;
+  --border: rgba(17, 17, 17, 0.1);
+  --border-strong: rgba(17, 17, 17, 0.2);
+  --muted: #888888;
 }
 
 /* Custom Scrollbar */

@@ -99,8 +99,8 @@ export default function SettingsMenu({ isNight, onToggleNight, onShowInsights, u
                  }}
                  onClick={item.onClick}
                  className={cn(
-                   "absolute z-10 w-12 h-12 rounded-full flex items-center justify-center shadow-lg backdrop-blur-xl border transition-colors group cursor-pointer active:scale-95",
-                   isNight ? "bg-surface/90 border-white/10 text-foreground hover:bg-surface-hover hover:border-primary/50" : "bg-white/90 border-black/10 text-black hover:bg-black/5 hover:border-primary/50"
+                   "absolute z-10 w-12 h-12 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md border transition-colors group cursor-pointer active:scale-95",
+                   isNight ? "bg-surface border-white/10 text-foreground hover:bg-surface-hover hover:border-primary/50" : "bg-white/50 border-white/40 text-black hover:bg-white/70 hover:border-primary/50"
                  )}
                >
                  {item.icon}
@@ -123,8 +123,8 @@ export default function SettingsMenu({ isNight, onToggleNight, onShowInsights, u
            }}
            whileTap={{ scale: 0.95 }}
            className={cn(
-             "relative z-20 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl border transition-colors cursor-pointer",
-             isNight ? (isOpen ? "bg-surface border-white/20 text-primary hover:bg-surface/90" : "bg-surface/60 border-white/10 text-foreground hover:bg-surface") : (isOpen ? "bg-white border-black/20 text-primary hover:bg-white/90" : "bg-black/5 border-black/10 text-black hover:bg-black/10")
+             "relative z-20 w-14 h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md border transition-colors cursor-pointer",
+             isNight ? (isOpen ? "bg-surface border-white/20 text-primary hover:bg-surface/90" : "bg-surface/50 border-white/10 text-foreground hover:bg-surface") : (isOpen ? "bg-white/90 border-white/40 text-primary hover:bg-white" : "bg-white/40 border-white/30 text-black hover:bg-white/60")
            )}
            aria-label="Settings"
            title={isFa ? 'تنظیمات' : 'Settings'}

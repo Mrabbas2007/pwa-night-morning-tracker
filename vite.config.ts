@@ -23,7 +23,15 @@ export default defineConfig(() => {
           description: 'A frictionless evening and morning routine planner.',
           theme_color: '#09090b',
           background_color: '#09090b',
-          display: 'standalone'
+          display: 'standalone',
+          icons: [
+            {
+              src: '/icon.svg',
+              sizes: 'any',
+              type: 'image/svg+xml',
+              purpose: 'any maskable'
+            }
+          ]
         }
       })
     ],

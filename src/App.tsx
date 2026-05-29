@@ -5,6 +5,7 @@ import SleepingScreen from './components/SleepingScreen';
 import Onboarding from './components/Onboarding';
 import Insights from './components/Insights';
 import SettingsMenu from './components/SettingsMenu';
+import InstallPrompt from './components/InstallPrompt';
 import { getDailyLog, saveDailyLog, getUserProfile, saveUserProfile } from './store/db';
 import { DailyLog, UserProfile } from './types';
 import { AnimatePresence, motion } from 'motion/react';
@@ -133,18 +134,18 @@ export default function App() {
   const isSleeping = isNight && !!log?.nightMood?.bedTime;
 
   return (
-    <div className="w-full min-h-screen relative overflow-hidden bg-background text-foreground font-sans">
+    <div className={cn("w-full min-h-screen relative overflow-hidden bg-background text-foreground font-sans transition-colors duration-500", !isNight && !isSleeping && "theme-morning")}>
       <AnimatePresence mode="wait">
         {isSleeping ? (
-            <motion.div key="sleep" className="w-full h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div key="sleep" className="w-full h-full min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                <SleepingScreen onWake={handleWakeUp} lang={userProfile.lang} />
             </motion.div>
         ) : isNight ? (
-            <motion.div key="night" className="w-full h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div key="night" className="w-full h-full min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <NightMode log={log!} onUpdate={handleUpdate} user={userProfile} onUpdateUser={handleUpdateUser} />
             </motion.div>
         ) : (
-          <motion.div key="morning" className="w-full h-full bg-background theme-morning" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div key="morning" className="w-full h-full min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
              <MorningMode log={log!} onUpdate={handleUpdate} user={userProfile} onUpdateUser={handleUpdateUser} />
           </motion.div>
         )}
@@ -162,6 +163,10 @@ export default function App() {
           onUpdateUser={handleUpdateUser}
           onRenameRequest={() => setIsRenaming(true)}
         />
+      )}
+      
+      {!isSleeping && (
+        <InstallPrompt isFa={userProfile.lang === 'fa'} isNight={isNight} />
       )}
     </div>
   );
