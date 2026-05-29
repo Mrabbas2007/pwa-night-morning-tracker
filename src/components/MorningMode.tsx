@@ -116,33 +116,61 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
       {/* Background accents */}
       <div className="absolute top-[-100px] left-[-100px] w-96 h-96 md:w-[500px] md:h-[500px] bg-yellow-900/10 rounded-full blur-[120px] opacity-40 pointer-events-none"></div>
       
-      <header className="mb-10 w-full max-w-2xl mx-auto z-10 flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start w-full mb-4 border-b border-border-strong pb-6 gap-6 sm:gap-0">
+      <header className="mb-10 w-full max-w-2xl mx-auto z-10 flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-6 sm:gap-0">
            <div className="flex flex-col w-full sm:w-auto">
               <div className="flex justify-between sm:justify-start items-center w-full gap-4">
-                <h1 className="text-3xl font-light tracking-tight flex items-center gap-3">
-                  <span className="w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_color-mix(in_srgb,var(--primary)_40%,transparent)]"></span>
-                  {isFa ? `صبح بخیر، ${user.name}` : `Good morning, ${user.name}`}
-                </h1>
-                <div className="flex items-center gap-1 sm:hidden bg-surface-hover rounded p-1" dir="ltr">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full border border-primary/30 flex items-center justify-center bg-surface-hover">
+                    <span className="text-xl font-sans text-primary">{user.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-light tracking-tight flex items-center gap-2">
+                      {isFa ? `صبح بخیر، ${user.name}` : `Good morning, ${user.name}`}
+                    </h1>
+                    <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2" dir="ltr">
+                      <span className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse"></span>
+                      Morning Protocol
+                    </p>
+                  </div>
+                </div>
+                {/* Mobile Language Switch */}
+                <div className="flex items-center gap-1 sm:hidden bg-surface-hover border border-border rounded p-1" dir="ltr">
                   <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
                   <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
                 </div>
               </div>
-              <p className="text-secondary font-mono text-[10px] mt-2 uppercase tracking-widest bg-transparent" dir="ltr">System Status: Morning Protocol Active</p>
            </div>
            <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans w-full sm:w-auto`} dir="ltr">
-              <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover rounded p-1" dir="ltr">
+              {/* Desktop Language Switch */}
+              <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover border border-border rounded p-1" dir="ltr">
                 <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
                 <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
               </div>
-              <p className="text-xl md:text-2xl font-serif italic text-foreground">{dateFormatter.format(now)}</p>
+              <p className="text-xl md:text-2xl font-serif italic text-foreground leading-none">{dateFormatter.format(now)}</p>
            </div>
         </div>
         
-        <div className="p-4 border border-border bg-surface rounded-xl shadow-sm backdrop-blur-sm relative overflow-hidden mt-4">
-           <div className={cn("absolute top-0 h-full w-1 bg-primary/50", isFa ? 'right-0' : 'left-0')}></div>
-           <p className={cn("text-muted leading-relaxed font-light text-sm md:text-base", isFa ? 'mr-3' : 'ml-3')}>{generateSummary()}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <div className="p-5 border border-border bg-surface rounded-2xl shadow-sm relative overflow-hidden backdrop-blur-sm flex flex-col justify-center">
+              <div className={cn("absolute top-0 h-full w-1 bg-primary/50", isFa ? 'right-0' : 'left-0')}></div>
+              <span className="text-xs font-mono uppercase tracking-widest text-muted mb-2">{isFa ? 'وضعیت فعلی شما' : 'Current Status'}</span>
+              <p className="text-foreground leading-relaxed font-light text-sm">{generateSummary()}</p>
+           </div>
+           <div className="p-5 border border-border bg-surface rounded-2xl shadow-sm relative overflow-hidden flex flex-col justify-center gap-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-muted">{isFa ? 'خلاصه وظایف' : 'Task Overview'}</span>
+              <div className="flex gap-4 items-center">
+                 <div className="flex flex-col">
+                    <span className="text-2xl font-serif text-foreground">{toPersianNum(log.tasks.length, lang)}</span>
+                    <span className="text-xs text-secondary">{isFa ? 'کل تسک‌ها' : 'Total'}</span>
+                 </div>
+                 <div className="w-[1px] h-8 bg-border"></div>
+                 <div className="flex flex-col">
+                    <span className="text-2xl font-serif text-primary">{toPersianNum(log.tasks.filter(t => t.completed).length, lang)}</span>
+                    <span className="text-xs text-secondary">{isFa ? 'انجام شده' : 'Done'}</span>
+                 </div>
+              </div>
+           </div>
         </div>
       </header>
 
@@ -182,15 +210,27 @@ export default function MorningMode({ log, onUpdate, user, onUpdateUser }: Props
           </div>
           
           <form className="relative mb-6 group" onSubmit={handleAddTask}>
-            <input
-              type="text"
-              value={newTaskText}
-              onChange={(e) => setNewTaskText(e.target.value)}
-              placeholder={isFa ? "نیاز به انجام کار جدیدی دارید؟ (Enter بزنید)" : "Need to add a new task? (Press Enter)"}
-              className="w-full bg-surface border border-border rounded-xl py-4 px-5 text-base font-light focus:outline-none focus:border-primary/50 focus:bg-background transition-all placeholder:text-secondary shadow-sm"
-              style={{ fontSize: '16px' }} // Prevent iOS Zoom
-            />
-            <button type="submit" className="hidden">Submit</button>
+            <div className="flex flex-row items-center bg-surface border border-border rounded-xl focus-within:border-primary/50 focus-within:bg-background transition-all shadow-sm">
+              <input
+                type="text"
+                value={newTaskText}
+                onChange={(e) => setNewTaskText(e.target.value)}
+                placeholder={isFa ? "نیاز به انجام کار جدیدی دارید؟" : "Need to add a new task?"}
+                className="flex-1 bg-transparent py-4 px-5 text-base font-light focus:outline-none placeholder:text-secondary"
+                style={{ fontSize: '16px' }} // Prevent iOS Zoom
+              />
+              <button 
+                type="submit" 
+                disabled={!newTaskText.trim()}
+                className={cn(
+                  "w-12 h-12 flex items-center justify-center rounded-lg bg-primary text-background transition-all active:scale-95 disabled:opacity-30 disabled:active:scale-100 disabled:cursor-not-allowed hover:bg-primary/90",
+                  isFa ? "ml-2" : "mr-2"
+                )}
+                aria-label={isFa ? "ثبت تسک" : "Add task"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              </button>
+            </div>
              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-muted text-[10px] font-mono tracking-widest uppercase opacity-0 group-focus-within:opacity-100 transition-opacity hidden md:block">
                [ Press Enter ]
              </div>

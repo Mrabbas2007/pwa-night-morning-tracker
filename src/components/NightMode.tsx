@@ -75,27 +75,57 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
         {isFa ? 'سازماندهی ذهن به سبکی نوین' : 'Non-Linear Organization'}
       </div>
 
-      <header className="flex flex-col sm:flex-row justify-between items-start z-10 w-full max-w-2xl mx-auto mb-12 border-b border-border-strong pb-8 gap-6 sm:gap-0">
-        <div className="flex flex-col w-full sm:w-auto">
-          <div className="flex justify-between sm:justify-start items-center w-full">
-            <h1 className="text-3xl font-light tracking-tight flex items-center gap-3">
-              <span className="w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_color-mix(in_srgb,var(--primary)_50%,transparent)]"></span>
-              {isFa ? `شب خوش، ${user.name}` : `Good evening, ${user.name}`}
-            </h1>
-            <div className="flex items-center gap-1 sm:hidden bg-surface-hover rounded p-1" dir="ltr">
-              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
-            </div>
-          </div>
-          <p className="text-secondary font-mono text-[10px] mt-2 uppercase tracking-widest" dir="ltr">System Status: Night Protocol Active</p>
+      <header className="mb-10 w-full max-w-2xl mx-auto z-10 flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-6 sm:gap-0">
+           <div className="flex flex-col w-full sm:w-auto">
+              <div className="flex justify-between sm:justify-start items-center w-full gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full border border-primary/30 flex items-center justify-center bg-surface-hover shadow-[0_0_15px_color-mix(in_srgb,var(--primary)_20%,transparent)]">
+                    <span className="text-xl font-sans text-primary">{user.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-light tracking-tight flex items-center gap-2 text-foreground">
+                      {isFa ? `شب خوش، ${user.name}` : `Good evening, ${user.name}`}
+                    </h1>
+                    <p className="text-secondary font-mono text-[10px] mt-1 uppercase tracking-widest flex items-center gap-2" dir="ltr">
+                      <span className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse"></span>
+                      Night Protocol
+                    </p>
+                  </div>
+                </div>
+                {/* Mobile Language Switch */}
+                <div className="flex items-center gap-1 sm:hidden bg-surface-hover border border-border rounded p-1" dir="ltr">
+                  <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
+                  <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
+                </div>
+              </div>
+           </div>
+           <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans w-full sm:w-auto`} dir="ltr">
+              {/* Desktop Language Switch */}
+              <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover border border-border rounded p-1" dir="ltr">
+                <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-1 rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
+                <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-1 rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
+              </div>
+              <p className="text-xl md:text-2xl font-serif italic text-foreground leading-none">{dateFormatter.format(now)}</p>
+           </div>
         </div>
-        <div className={`flex flex-col items-start ${isFa ? 'sm:items-end text-left sm:text-right' : 'sm:items-end text-right'} font-sans text-foreground w-full sm:w-auto`} dir="ltr">
-            <div className="hidden sm:flex items-center gap-1 mb-2 bg-surface-hover rounded p-1">
-              <button onClick={() => onUpdateUser({...user, lang: 'en'})} className={cn("text-[10px] font-mono px-3 py-[2px] rounded transition-colors", !isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>EN</button>
-              <button onClick={() => onUpdateUser({...user, lang: 'fa'})} className={cn("text-[12px] font-sans px-3 py-[2px] rounded transition-colors", isFa ? "bg-primary/20 text-primary" : "text-muted hover:text-secondary")}>فا</button>
-            </div>
-            <p className="text-xl md:text-2xl font-serif italic">{dateFormatter.format(now)}</p>
-            <p className="text-secondary text-xs mt-1 w-full flex justify-between sm:justify-end gap-2">{isFa ? 'تسک‌های ثبت شده:' : 'Tasks logged:'} <span className="text-primary">{toPersianNum(log.tasks.length, lang)}</span></p>
+        
+        {/* Minimal Night Stats */}
+        <div className="grid grid-cols-2 gap-4">
+           <div className="p-4 border border-border bg-surface rounded-2xl flex flex-col items-center justify-center gap-1 relative overflow-hidden backdrop-blur-sm">
+               <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+               <span className="text-2xl font-serif text-foreground">{toPersianNum(log.tasks.length, lang)}</span>
+               <span className="text-[10px] font-mono uppercase tracking-widest text-secondary">{isFa ? 'کار برای فردا' : 'Tasks for Tomorrow'}</span>
+           </div>
+           <div className="p-4 border border-border bg-surface rounded-2xl flex flex-col items-center justify-center gap-1 relative overflow-hidden backdrop-blur-sm group cursor-pointer hover:border-primary/50 transition-colors"
+                onClick={() => setEnergy(Math.min(5, energy + 1))}
+           >
+               <div className="absolute top-0 left-0 w-16 h-16 bg-primary/5 rounded-br-full pointer-events-none"></div>
+               <span className="text-2xl font-serif text-primary flex items-center gap-1">
+                  {toPersianNum(energy, lang)}<span className="text-sm text-secondary">/5</span>
+               </span>
+               <span className="text-[10px] font-mono uppercase tracking-widest text-secondary">{isFa ? 'انرژی تخمینی' : 'Est. Energy'}</span>
+           </div>
         </div>
       </header>
 
@@ -104,28 +134,40 @@ export default function NightMode({ log, onUpdate, user, onUpdateUser }: Props) 
           <label className="text-secondary text-xs uppercase tracking-widest mb-4 block text-center">
             {isFa ? 'ذهن خود را خالی کنید' : 'Unload your mind'}
           </label>
-          <form onSubmit={handleSubmit} className="relative group bg-surface rounded-2xl border border-border focus-within:border-primary/50 transition-colors flex flex-col sm:flex-row items-center p-2 sm:p-2 sm:h-[80px]">
+          <form onSubmit={handleSubmit} className="relative group bg-surface rounded-2xl border border-border focus-within:border-primary/50 transition-colors flex flex-col p-2">
              {/* Input Area */}
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder={isFa ? "فردا چه کارهایی دارم؟" : "What's on your mind for tomorrow?"}
-              className={cn("w-full bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none focus:border-primary transition-colors placeholder:text-border-strong", isFa ? "sm:pl-48" : "sm:pr-48")}
-              style={{ fontSize: '16px' }} // Prevent iOS zoom
-            />
-            <button type="submit" className="hidden">Submit</button>
+            <div className="flex items-center w-full">
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder={isFa ? "فردا چه کارهایی دارم؟" : "What's on your mind for tomorrow?"}
+                className="flex-1 bg-transparent py-4 px-4 text-xl md:text-2xl font-light focus:outline-none placeholder:text-border-strong"
+                style={{ fontSize: '16px' }} // Prevent iOS zoom
+              />
+              <button 
+                type="submit" 
+                disabled={!text.trim()}
+                className={cn(
+                  "w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-primary text-background transition-all active:scale-95 disabled:opacity-30 disabled:active:scale-100 disabled:cursor-not-allowed hover:bg-primary/90",
+                  isFa ? "ml-2" : "mr-2"
+                )}
+                aria-label={isFa ? "ثبت تسک" : "Add task"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              </button>
+            </div>
             
-            {/* Category Buttons - Move to bottom on mobile, side on desktop */}
-            <div className={cn("flex w-full sm:w-auto h-full sm:absolute sm:top-1/2 sm:-translate-y-1/2 flex-row border-t sm:border-t-0 border-border sm:border-transparent mt-2 sm:mt-0 pt-3 sm:pt-0 justify-around sm:justify-start gap-4 opacity-100 sm:opacity-40 group-focus-within:opacity-100 xl:hover:opacity-100 transition-opacity", isFa ? "sm:left-4 sm:flex-row-reverse" : "sm:right-4 sm:flex-row")}>
+            {/* Category Buttons */}
+            <div className="flex w-full flex-row border-t border-border/50 mt-2 pt-3 justify-between sm:justify-start gap-2 sm:gap-6 opacity-60 group-focus-within:opacity-100 xl:hover:opacity-100 transition-opacity px-2 pb-1">
               {(Object.keys(CATEGORY_ICONS) as Array<Task['category']>).filter(cat => cat !== 'none').map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={(e) => { e.preventDefault(); setActiveCategory(activeCategory === cat ? 'none' : cat); }}
                   className={cn(
-                    "hover:text-primary transition-colors text-2xl sm:text-xl py-2 px-3 sm:p-0 flex-1 sm:flex-none text-center",
-                    activeCategory === cat ? "text-primary scale-110" : "text-muted"
+                    "hover:text-primary transition-colors text-2xl sm:text-xl py-2 px-3 sm:p-0 flex-1 sm:flex-none text-center rounded-lg hover:bg-surface-hover sm:hover:bg-transparent",
+                    activeCategory === cat ? "text-primary scale-110 bg-primary/10 sm:bg-transparent" : "text-muted"
                   )}
                   title={cat}
                 >
